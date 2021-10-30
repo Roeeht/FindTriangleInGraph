@@ -1,4 +1,6 @@
 #include "AdjacencyList.h"
+#include <fstream>
+
 using namespace std;
 namespace FT {
 
@@ -219,4 +221,31 @@ namespace FT {
 
 
 	}
+
+	void AdjacencyList::getTriangle(ofstream& outputFile)
+	{
+		for (int i = 1; i <= this->get_length(); i++)
+		{
+			for (auto j = this->get_adjacent_by_ref(i).begin();
+				j != this->get_adjacent_by_ref(i).end(); ++j)
+			{
+				for (auto k = this->get_adjacent_by_ref(j->get_first()).begin();
+					k != this->get_adjacent_by_ref(j->get_first()).end(); ++k)
+				{
+					if (this->IsAdjacent(k->get_first(), i))
+					{
+
+						outputFile << i << "," << j->get_first() << "," << k->get_first() << endl;
+						outputFile.close();
+						return;
+
+
+					}
+				}
+			}
+		}
+		cout << "NO";
+	}
+
+	
 }

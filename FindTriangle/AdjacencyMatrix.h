@@ -1,6 +1,6 @@
 #include "Graph.h"
 #include "List.h"
-
+using namespace std;
 
 namespace FT {
 
@@ -36,6 +36,8 @@ namespace FT {
 		void ReadGraph();
 
 		//void PrintGraph() const;
+
+		void getTriangle(ofstream& outputFile);
 
 
 	};

@@ -3,7 +3,7 @@
 #include "Pair.h"
 #include "List.h"
 #include "Graph.h"
-
+using namespace std;
 namespace FT {
 
 	class AdjacencyList : public Graph {
@@ -87,5 +87,8 @@ namespace FT {
 		/// <returns>distances array by name of vertices</returns>
 		int* BFS(int s);
 
+		void getTriangle(ofstream& outputFile);
+
+		
 	};
 }

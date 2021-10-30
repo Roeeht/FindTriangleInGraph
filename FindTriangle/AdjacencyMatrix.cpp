@@ -1,4 +1,5 @@
 #include "AdjacencyMatrix.h"
+#include <fstream>
 using namespace std;
 
 namespace FT
@@ -149,6 +150,36 @@ namespace FT
 
 	//void PrintGraph() const;
 
+
+	void AdjacencyMatrix::getTriangle(ofstream& outputFile)
+	{
+
+		//todo - create multiply matrixes func
+		//		 check after func if [i,j] [j,k] [k,i] are 1
+		/*for (int i = 0; i <= _length; i++) 
+		{
+			for (int j = 0; j <= _length; j++)
+			{
+				if (matrix[i][j] == 1)
+				{
+					for (int k = 0; k <= _length; k++)
+					{
+						if (matrix[j][k] == 1)
+						{
+							if (matrix[k][i] == 1 && k!= i)
+							{
+								outputFile << i << "," << j << "," << k << endl;
+								outputFile.close();
+								return;
+							}
+								
+						}
+					}
+				}
+			}
+		}
+		cout << "NO";*/
+	}
 
 
 }
