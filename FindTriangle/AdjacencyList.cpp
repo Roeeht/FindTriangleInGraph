@@ -1,5 +1,5 @@
-#include "AdjacencyList.h"
 #include <fstream>
+#include "AdjacencyMatrix.h"
 
 using namespace std;
 namespace FT {
@@ -224,6 +224,7 @@ namespace FT {
 
 	void AdjacencyList::getTriangle(ofstream& outputFile)
 	{
+		AdjacencyMatrix thisInMat(get_length());
 		for (int i = 1; i <= this->get_length(); i++)
 		{
 			for (auto j = this->get_adjacent_by_ref(i).begin();
@@ -232,7 +233,7 @@ namespace FT {
 				for (auto k = this->get_adjacent_by_ref(j->get_first()).begin();
 					k != this->get_adjacent_by_ref(j->get_first()).end(); ++k)
 				{
-					if (this->IsAdjacent(k->get_first(), i))
+					if (thisInMat.IsAdjacent(k->get_first(), i))
 					{
 
 						outputFile << i << "," << j->get_first() << "," << k->get_first() << endl;

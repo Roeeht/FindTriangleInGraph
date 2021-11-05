@@ -45,7 +45,20 @@ namespace FT
 		_length = 0;
 	}
 
+	AdjacencyMatrix::AdjacencyMatrix(AdjacencyList& source)
+	{
+		int len = source.get_length();
+		AdjacencyMatrix res(len);
+		for (int i = 1; i <= len; i++) 
+		{
+			for (auto j = source.get_adjacent_by_ref(i).begin(); j != source.get_adjacent_by_ref(i).end(); ++j)
+			{
+				matrix[i][j->get_first()] = 1;
+			}
+		}
+	}
 
+	
 	AdjacencyMatrix::AdjacencyMatrix(int size) : Graph(size), matrix(nullptr)
 	{
 		if (size > 0)
@@ -150,11 +163,32 @@ namespace FT
 
 	//void PrintGraph() const;
 
+	int** mulMat(int** mat1, int** mat2, int size1, int size2) {
+		int** rslt;
+
+		
+		for (int i = 0; i < size1; i++) {
+			for (int j = 0; j < size2; j++) {
+				rslt[i][j] = 0;
+
+				for (int k = 0; k < size2; k++) {
+					rslt[i][j] += mat1[i][k] * mat2[k][j];
+				}
+
+			}
+		}
+		return rslt;
+
+	}
 
 	void AdjacencyMatrix::getTriangle(ofstream& outputFile)
 	{
 
 		//todo - create multiply matrixes func
+
+
+
+		
 		//		 check after func if [i,j] [j,k] [k,i] are 1
 		/*for (int i = 0; i <= _length; i++) 
 		{
@@ -181,5 +215,6 @@ namespace FT
 		cout << "NO";*/
 	}
 
+	
 
 }

@@ -1,18 +1,16 @@
-﻿//summary:
+﻿//summary: todo
 //
 
-//gets: 
+//gets: todo
 //		
 //		
 //		
 
-//returns: 
+//returns: todo
 
-#include <chrono>
 #include <iomanip>
 #include <iostream>
 #include <fstream>
-#include "AdjacencyList.h"
 #include "AdjacencyMatrix.h"
 
 #include <string>
@@ -45,8 +43,9 @@ int main(int argc, char** args)
 
 	switch (algoNum)
 	{
-	case 1: {
-		AdjacencyList gl_adjacencies = AdjacencyList(verticesNum);
+	case 1: 
+	{
+		AdjacencyList gl_adjacencies(verticesNum);
 		//read edges
 		while (getline(infile, line))
 		{

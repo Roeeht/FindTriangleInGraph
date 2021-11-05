@@ -1,11 +1,11 @@
 #include "Graph.h"
-#include "List.h"
+#include "AdjacencyList.h"
+
 using namespace std;
 
 namespace FT {
 
-	class AdjacencyMatrix : public Graph
-	{
+	class AdjacencyMatrix : public Graph {
 	private:
 		int** matrix;
 		void init_matrix(int size);
@@ -16,10 +16,11 @@ namespace FT {
 
 
 	public:
-
+		
 		AdjacencyMatrix(int size = 0);
 		AdjacencyMatrix(const AdjacencyMatrix& other);
 		virtual ~AdjacencyMatrix();
+		AdjacencyMatrix(AdjacencyList& source);
 
 		AdjacencyMatrix& operator=(const AdjacencyMatrix& other);
 
@@ -38,7 +39,7 @@ namespace FT {
 		//void PrintGraph() const;
 
 		void getTriangle(ofstream& outputFile);
-
+		
 
 	};
 }
