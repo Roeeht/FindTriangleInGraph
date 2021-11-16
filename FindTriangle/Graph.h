@@ -9,7 +9,10 @@ namespace FT {
 	class Graph {
 	protected:
 
-		int _length;
+		int _length; //=V amount
+		int _edgesNum; //=E amount
+		int* degrees;
+
 		/// <summary>
 		/// check if num is in bounds of vertices
 		/// and return result as bool
@@ -22,7 +25,7 @@ namespace FT {
 
 		Graph(int size = 0);
 		Graph(const Graph& other) = default;
-		virtual ~Graph() {}
+		virtual ~Graph() {  }
 
 		Graph& operator=(const Graph& other) = default;
 		/// <summary>
@@ -30,6 +33,7 @@ namespace FT {
 		/// </summary>
 		/// <returns> aomunt </returns>
 		int get_length() const { return _length; }
+		int get_EdgesNum() const { return _edgesNum; }
 
 		virtual bool IsAdjacent(int u, int v) const = 0;
 

@@ -8,6 +8,8 @@ namespace FT {
 	void AdjacencyList::destroy()
 	{
 		delete[] _vertices;
+		delete[] degrees;
+
 		_vertices = nullptr;
 		_length = 0;
 	}
@@ -20,7 +22,9 @@ namespace FT {
 			_vertices = new Pair<int, List<Pair<int, float>>>[size];
 
 			for (int i = 0; i < size; i++)
+			{
 				_vertices[i].get_first() = i + 1;
+			}
 		}
 	}
 
@@ -97,8 +101,12 @@ namespace FT {
 
 	void AdjacencyList::AddEdge(int u, int v, float weight)
 	{
-		if (!IsAdjacent(u, v))
+		if (!IsAdjacent(u, v)) 
+		{
 			get_adjacent_by_ref(u).insert_to_tail(Pair<int, float>(v, weight));
+			_edgesNum++;
+			degrees[u]++;
+		}
 	}
 
 

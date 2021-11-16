@@ -12,7 +12,6 @@ namespace FT {
 	private:
 
 		Pair<int, List<Pair<int, float>>>* _vertices;
-
 		void destroy();
 
 	public:
@@ -88,6 +87,7 @@ namespace FT {
 		/// <param name="s"> name of vertex</param>
 		/// <returns>distances array by name of vertices</returns>
 		int* BFS(int s);
+		int getDegree(int vertex) { return degrees[vertex]; };
 
 		void getTriangle(ofstream& outputFile);
 

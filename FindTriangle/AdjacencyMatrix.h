@@ -27,7 +27,7 @@ namespace FT {
 
 		static AdjacencyMatrix MakeEmptyGraph(int n);
 		bool IsAdjacent(int u, int v) const override;
-
+		int getDegree(int vertex) { return degrees[vertex]; };
 
 
 		void AddEdge(int u, int v, float weight) override;

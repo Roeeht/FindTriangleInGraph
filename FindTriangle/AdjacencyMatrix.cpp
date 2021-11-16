@@ -21,7 +21,7 @@ namespace FT
 		{
 			for (int j = 0; j <= _length; j++)
 			{
-				matrix[i][j] = 0;
+				this->matrix[i][j] = 0;
 			}
 		}
 	}
@@ -41,6 +41,7 @@ namespace FT
 				delete[] matrix[i];
 			delete[] matrix;
 		}
+		delete[] degrees;
 		matrix = nullptr;
 		_length = 0;
 	}
@@ -49,7 +50,7 @@ namespace FT
 	{
 		int len = source.get_length();
 		AdjacencyMatrix res(len);
-		for (int i = 1; i <= len; i++) 
+		for (int i = 1; i <= len; i++)
 		{
 			for (auto j = source.get_adjacent_by_ref(i).begin(); j != source.get_adjacent_by_ref(i).end(); ++j)
 			{
@@ -58,7 +59,7 @@ namespace FT
 		}
 	}
 
-	
+
 	AdjacencyMatrix::AdjacencyMatrix(int size) : Graph(size), matrix(nullptr)
 	{
 		if (size > 0)
@@ -115,8 +116,10 @@ namespace FT
 	{
 		if (!check_bounds(u) || !check_bounds(v))
 			throw std::logic_error("out of bounds - MatrixGraph");
-		else
-			matrix[u][v] = 1;
+
+		matrix[u][v] = 1;
+		degrees[u]++;
+		_edgesNum++;
 	}
 
 	void AdjacencyMatrix::RemoveEdge(int u, int v)
@@ -164,14 +167,18 @@ namespace FT
 	//void PrintGraph() const;
 
 	int** mulMat(int** mat1, int** mat2, int size1, int size2) {
-		int** rslt;
+		int** rslt = new int* [size1];
+		for (int i = 0; i < size1 + 1; i++)
+			rslt[i] = new int[size2 + 1];
 
-		
-		for (int i = 0; i < size1; i++) {
-			for (int j = 0; j < size2; j++) {
+		for (int i = 0; i < size1; i++)
+		{
+			for (int j = 0; j < size2; j++)
+			{
 				rslt[i][j] = 0;
 
-				for (int k = 0; k < size2; k++) {
+				for (int k = 0; k < size2; k++)
+				{
 					rslt[i][j] += mat1[i][k] * mat2[k][j];
 				}
 
@@ -181,40 +188,83 @@ namespace FT
 
 	}
 
-	void AdjacencyMatrix::getTriangle(ofstream& outputFile)
+	void AdjacencyMatrix::getTriangle(ofstream& outputFile) //using multiply matrices algo
 	{
-
+		AdjacencyList thisInList(this->get_length());
 		//todo - create multiply matrixes func
-
-
-
-		
-		//		 check after func if [i,j] [j,k] [k,i] are 1
-		/*for (int i = 0; i <= _length; i++) 
+		int** PoweredTwo = mulMat(matrix, matrix, this->get_length(), this->get_length());
+		int** PoweredThree = mulMat(matrix, PoweredTwo, this->get_length(), this->get_length());
+		for (int i = 0; i < this->get_length(); i++)
 		{
-			for (int j = 0; j <= _length; j++)
+			if (PoweredThree[i][i] > 0) //true if found a triangle
 			{
-				if (matrix[i][j] == 1)
+				for (int j = 0; j < this->get_length(); j++)
 				{
-					for (int k = 0; k <= _length; k++)
+					if (PoweredTwo[i][j] > 0)
 					{
-						if (matrix[j][k] == 1)
+						for (int k = 0; k < this->get_length(); k++)
 						{
-							if (matrix[k][i] == 1 && k!= i)
+							if (PoweredTwo[j][k] > 0 && matrix[i][k] > 0)
 							{
 								outputFile << i << "," << j << "," << k << endl;
 								outputFile.close();
 								return;
 							}
-								
 						}
+
+					}
+				}
+
+			}
+		}
+		cout << "NO";
+	}
+	//for (int i = 0; i < this->get_length(); i++)
+	//{
+	//	for (int j = 0; j < this->get_length(); j++)
+	//	{
+	//		if (PoweredTwo[i][j] > 0 && matrix[i][j] > 0) //true if found a triangle
+	//		{
+	//			for (int k = 0; k < this->get_length(); k++) //find the third edge in the triangle
+	//			{
+	//				if (thisInList.IsAdjacent(i,k) && thisInList.IsAdjacent(k, j))
+	//				{
+	//					outputFile << i << "," << j << "," << k << endl;
+	//					outputFile.close();
+	//					return;
+	//				}
+	//			}
+	//		
+	//		}
+
+	//	}
+
+	//}
+
+
+	//		 check after func if [i,j] [j,k] [k,i] are 1
+	/*for (int i = 0; i <= _length; i++)
+	{
+		for (int j = 0; j <= _length; j++)
+		{
+			if (matrix[i][j] == 1)
+			{
+				for (int k = 0; k <= _length; k++)
+				{
+					if (matrix[j][k] == 1)
+					{
+						if (matrix[k][i] == 1 && k!= i)
+						{
+							outputFile << i << "," << j << "," << k << endl;
+							outputFile.close();
+							return;
+						}
+
 					}
 				}
 			}
 		}
-		cout << "NO";*/
 	}
-
-	
+	cout << "NO";*/
 
 }
