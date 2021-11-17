@@ -230,29 +230,63 @@ namespace FT {
 
 	}
 
-	void AdjacencyList::getTriangle(ofstream& outputFile)
+	int* AdjacencyList::getTriangle(ofstream& outputFile, int algo4vertex)
 	{
-		AdjacencyMatrix thisInMat(get_length());
-		for (int i = 1; i <= this->get_length(); i++)
+		int triangleVertices[3];
+		AdjacencyMatrix AdjacencyListInMat(*this);
+		if (algo4vertex != 0)
 		{
+			int i = algo4vertex;
 			for (auto j = this->get_adjacent_by_ref(i).begin();
 				j != this->get_adjacent_by_ref(i).end(); ++j)
 			{
 				for (auto k = this->get_adjacent_by_ref(j->get_first()).begin();
 					k != this->get_adjacent_by_ref(j->get_first()).end(); ++k)
 				{
-					if (thisInMat.IsAdjacent(k->get_first(), i))
+					if (AdjacencyListInMat.IsAdjacent(k->get_first(), i))
 					{
 
 						outputFile << i << "," << j->get_first() << "," << k->get_first() << endl;
 						outputFile.close();
-						return;
+						triangleVertices[0] = i;
+						triangleVertices[1] = j->get_first();
+						triangleVertices[2] = k->get_first();
+
+						return triangleVertices;
 
 
 					}
 				}
 			}
 		}
+		else 
+		{
+			for (int i = 1; i <= this->get_length(); i++)
+			{
+				for (auto j = this->get_adjacent_by_ref(i).begin();
+					j != this->get_adjacent_by_ref(i).end(); ++j)
+				{
+					for (auto k = this->get_adjacent_by_ref(j->get_first()).begin();
+						k != this->get_adjacent_by_ref(j->get_first()).end(); ++k)
+					{
+						if (AdjacencyListInMat.IsAdjacent(k->get_first(), i))
+						{
+
+							outputFile << i << "," << j->get_first() << "," << k->get_first() << endl;
+							outputFile.close();
+							triangleVertices[0] = i;
+							triangleVertices[1] = j->get_first();
+							triangleVertices[2] = k->get_first();
+
+							return triangleVertices;
+
+
+						}
+					}
+				}
+			}
+		}
+		triangleVertices[0] = -1;
 		cout << "NO";
 	}
 

@@ -49,7 +49,8 @@ namespace FT
 	AdjacencyMatrix::AdjacencyMatrix(AdjacencyList& source)
 	{
 		int len = source.get_length();
-		AdjacencyMatrix res(len);
+		init_matrix(len);
+		make_empty_graph();
 		for (int i = 1; i <= len; i++)
 		{
 			for (auto j = source.get_adjacent_by_ref(i).begin(); j != source.get_adjacent_by_ref(i).end(); ++j)
@@ -188,7 +189,8 @@ namespace FT
 
 	}
 
-	void AdjacencyMatrix::getTriangle(ofstream& outputFile) //using multiply matrices algo
+	//using multiply matrices algo
+	void AdjacencyMatrix::getTriangle(ofstream& outputFile) 
 	{
 		AdjacencyList thisInList(this->get_length());
 		//todo - create multiply matrixes func
