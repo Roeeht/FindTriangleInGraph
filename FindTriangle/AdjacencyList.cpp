@@ -19,9 +19,9 @@ namespace FT {
 	{
 		if (size > 0)
 		{
-			_vertices = new Pair<int, List<Pair<int, float>>>[size];
+			_vertices = new Pair<int, List<Pair<int, float>>>[size+1];
 
-			for (int i = 0; i < size; i++)
+			for (int i = 0; i < size+1; i++)
 			{
 				_vertices[i].get_first() = i + 1;
 			}
@@ -106,6 +106,7 @@ namespace FT {
 			get_adjacent_by_ref(u).insert_to_tail(Pair<int, float>(v, weight));
 			_edgesNum++;
 			degrees[u]++;
+			degrees[v]++;
 		}
 	}
 
@@ -230,13 +231,13 @@ namespace FT {
 
 	}
 
-	int* AdjacencyList::getTriangle(ofstream& outputFile, int algo4vertex)
+	int* AdjacencyList::getTriangle(ofstream& outputFile, int algo3HighDegVertex)
 	{
 		int triangleVertices[3];
 		AdjacencyMatrix AdjacencyListInMat(*this);
-		if (algo4vertex != 0)
+		if (algo3HighDegVertex != 0)
 		{
-			int i = algo4vertex;
+			int i = algo3HighDegVertex;
 			for (auto j = this->get_adjacent_by_ref(i).begin();
 				j != this->get_adjacent_by_ref(i).end(); ++j)
 			{
@@ -247,7 +248,6 @@ namespace FT {
 					{
 
 						outputFile << i << "," << j->get_first() << "," << k->get_first() << endl;
-						outputFile.close();
 						triangleVertices[0] = i;
 						triangleVertices[1] = j->get_first();
 						triangleVertices[2] = k->get_first();
@@ -273,7 +273,6 @@ namespace FT {
 						{
 
 							outputFile << i << "," << j->get_first() << "," << k->get_first() << endl;
-							outputFile.close();
 							triangleVertices[0] = i;
 							triangleVertices[1] = j->get_first();
 							triangleVertices[2] = k->get_first();
@@ -286,8 +285,11 @@ namespace FT {
 				}
 			}
 		}
-		triangleVertices[0] = -1;
-		cout << "NO";
+		triangleVertices[2] = -1; //flag for triangle wasn't found
+		if (algo3HighDegVertex == 0)
+			cout << "NO";
+		return triangleVertices;
+
 	}
 
 	

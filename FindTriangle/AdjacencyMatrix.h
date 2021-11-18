@@ -38,8 +38,9 @@ namespace FT {
 
 		//void PrintGraph() const;
 
-		void getTriangle(ofstream& outputFile);
-		
+		int getTriangle(ofstream& outputFile); //returns bool if found a triangle
+		void freeMat(int** matrix, int size);
+
 
 	};
 }

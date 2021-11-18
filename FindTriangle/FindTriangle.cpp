@@ -11,7 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include "AdjacencyMatrix.h"
-#include <cmath> 
+#include <math.h> 
 #include <string>
 #include <sstream>
 
@@ -23,10 +23,12 @@ using namespace std;
 
 int main(int argc, char** args)
 {
-	fstream infile;
 	string FileName = args[1];
 	string line;
 	int algoNum;
+	int verticesNum;
+	int caseFourFlag = 0;
+	fstream infile;
 	infile.open(args[1], ios::in);
 	if (infile.good()) {
 		//read chosen algorithm number
@@ -39,15 +41,18 @@ int main(int argc, char** args)
 	}
 	//read vertices amount
 	getline(infile, line);
-	int verticesNum = stoi(line);
+	verticesNum = stoi(line);
 	if (verticesNum < 1) {
 		cout << "invalid input";
 		exit(1);
 	}
-
+	ofstream outputFile;
+	outputFile.open(args[2], ios::out);
 	switch (algoNum)
 	{
-	case 1: //todo - check
+	case 4:
+		caseFourFlag = 1;
+	case 1:
 	{
 		AdjacencyList gl_adjacencies(verticesNum);
 		//read edges
@@ -59,19 +64,28 @@ int main(int argc, char** args)
 			gl_adjacencies.AddEdge(u, v, 0);
 
 		}
-		infile.close();
-		ofstream outputFile;
-		outputFile.open(args[2], ios::out);
 		gl_adjacencies.getTriangle(outputFile);
-		outputFile.close();
-		break;
-
-
+		if (!caseFourFlag)
+		{
+			outputFile.close();
+			infile.close();
+			break;
+		}
 	}
-		
-	case 2: { //todo - check
+
+	case 2:
+	{
 		AdjacencyMatrix gm_adjacencies(verticesNum);
+		if (caseFourFlag)
+		{
+			infile.clear();
+			infile.seekg(0, ios::beg);
+			getline(infile, line);
+			getline(infile, line);
+
+		}
 		//read edges
+
 		while (getline(infile, line))
 		{
 			istringstream iss(line);
@@ -80,18 +94,32 @@ int main(int argc, char** args)
 			gm_adjacencies.AddEdge(u, v, 0);
 
 		}
-		infile.close();
-		ofstream outputFile;
-		outputFile.open(args[2], ios::out);
 		gm_adjacencies.getTriangle(outputFile);
-		outputFile.close();
+		if (!caseFourFlag)
+		{
+			outputFile.close();
+			infile.close();
 			break;
-
+		}
 	}
-		
-	case 3:	
+
+	case 3:
 	{
-		// todo - alon yuster zwick
+		int i;
+		int j;
+		int highDegreesAmount = 0;
+		int* triangleVertices;
+		double mPoweredHalf;
+			
+		if (caseFourFlag)
+		{
+			infile.clear();
+			infile.seekg(0, ios::beg);
+			getline(infile, line);
+			getline(infile, line);
+
+		}
+			
 		AdjacencyList alonYusterAdjacenciesList(verticesNum);
 		//AdjacencyMatrix alonYusterGraph(verticesNum);
 		while (getline(infile, line))
@@ -99,111 +127,55 @@ int main(int argc, char** args)
 			istringstream iss(line);
 			int u, v;
 			if (!(iss >> u >> v)) { break; } // error
-			//alonYusterGraph.AddEdge(u, v, 0);
 			alonYusterAdjacenciesList.AddEdge(u, v, 0);
 		}
-		infile.close();
-		ofstream outputFile;
-		outputFile.open(args[2], ios::out);
 		//calc m^1/2
-		int mPoweredHalf = pow(alonYusterAdjacenciesList.get_EdgesNum(),0.5);
+		mPoweredHalf = sqrt(alonYusterAdjacenciesList.get_EdgesNum());
 		//find low degree vertices
-		//todo - implement getDegreesArr and mergeSort
 		//loop over degrees
-		int i;
-		int highDegreesAmount=0;
-		for (i = 1; i < alonYusterAdjacenciesList.get_length(); i++)
+
+		for (i = 1; i <= alonYusterAdjacenciesList.get_length(); i++)
 		{
-			////if not bigger than mPoweredHalf - "lowDegree"
+			//if not bigger than mPoweredHalf = "lowDegree"
 			if (alonYusterAdjacenciesList.getDegree(i) <= mPoweredHalf)
 			{
-				int* triangleVertices = alonYusterAdjacenciesList.getTriangle(outputFile, i);
-				if (triangleVertices[0] != -1)
+				triangleVertices = alonYusterAdjacenciesList.getTriangle(outputFile, i);
+
+				if (triangleVertices[2] != -1)
 				{
-					outputFile << triangleVertices[0] << "," << triangleVertices[1] <<
-						"," << triangleVertices[2] << endl;
-					outputFile.close();
-					break;
+					return 0;
 				}
 			}
 			else
 				highDegreesAmount++;
 		}
-		//else
-			
+
+		//didn't find in lowDegrees vertices
+
 		AdjacencyMatrix highDegreesMat(verticesNum);
-		int j;
-		for (i = 1; i < verticesNum; i++)
+		for (i = 1; i <= verticesNum; i++)
 		{
 			if (alonYusterAdjacenciesList.getDegree(i) > mPoweredHalf)
 			{
 				//loop over highDegree vertex edges and add only to highDegreeMat
-				for (j = 1; j < alonYusterAdjacenciesList.getDegree(i); j++)
+				for (j = 1; j <= verticesNum; j++)
 				{
-					if (alonYusterAdjacenciesList.getDegree(j) > mPoweredHalf)
+					int jDeg = alonYusterAdjacenciesList.getDegree(j);
+					if (jDeg > mPoweredHalf && i != j)
 						highDegreesMat.AddEdge(i, j, 0);
 				}
-				
+
 			}
 		}
-			//delete vertices from degree 0
-
-			//check with algo 2 triangle in the new graph
+		//check with algo 2 triangle in the new graph
 		highDegreesMat.getTriangle(outputFile);
 
-			
-		//for (int k = 1; k < alonYusterAdjacenciesList.get_EdgesNum(); k++)
-		//{
-		//	if (alonYusterAdjacenciesList.getDegree(k) == 0)
-		//		alonYusterAdjacenciesList.
-		//}
 
-		//	//and if it is, check if .... ???
-		//for (int i = 0; i < alonYusterGraph.get_EdgesNum(); i++)
-		//{
-		//	for (int j = 0; j < alonYusterGraph.get_EdgesNum(); j++)
-		//	{
-		//		if (alonYusterGraph.getDegree(i) < mPoweredHalf)
-		//		{
-		//			if (alonYusterGraph.IsAdjacent(j, i))
-		//				//print triangle
-		//				break;
-		//		}
-		//	}
-		//}
-		//loop over route of 3 u->v->w when v is low degree, and check if there is w->u edge
-		//find triangle of high degree only:
-		//build new graph G' with the high degree vertices only and their edges.
-		//use algo2 to find triangle.
-		
-
-		outputFile.close();
+			outputFile.close();
 			infile.close();
-		break;
-	}
-		
-	case 4:	
-	{ //todo run all algorithms and output them all
-		//AdjacencyMatrix gm(verticesNum);
-		//AdjacencyList gl(verticesNum);
-		////todo - create alon yuster zwick
-		////read edges
-		//while (getline(infile, line))
-		//{
-		//	istringstream iss(line);
-		//	int u, v;
-		//	if (!(iss >> u >> v)) { break; } // error
-		//	gm.AddEdge(u, v, 0);
-		//	gl.AddEdge(u, v, 0);
-		//	//todo - add alon yuster edge
-		//}
-		//float mPowHalf = pow(gm.get_EdgesNum(), 0.5);
-		//	
-		//infile.close();
-		//break;
-	}
-	
-	}
+			break;
+		}
 
+	}
 }
 

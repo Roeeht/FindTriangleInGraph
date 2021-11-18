@@ -89,7 +89,7 @@ namespace FT {
 		int* BFS(int s);
 		int getDegree(int vertex) { return degrees[vertex]; };
 
-		int* getTriangle(ofstream& outputFile, int algo4vertex = 0);
+		int* getTriangle(ofstream& outputFile, int algo3HighDegVertex = 0);
 
 		
 	};

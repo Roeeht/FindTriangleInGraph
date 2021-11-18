@@ -120,6 +120,7 @@ namespace FT
 
 		matrix[u][v] = 1;
 		degrees[u]++;
+		degrees[v]++;
 		_edgesNum++;
 	}
 
@@ -168,17 +169,17 @@ namespace FT
 	//void PrintGraph() const;
 
 	int** mulMat(int** mat1, int** mat2, int size1, int size2) {
-		int** rslt = new int* [size1];
+		int** rslt = new int* [size1+1];
 		for (int i = 0; i < size1 + 1; i++)
 			rslt[i] = new int[size2 + 1];
 
-		for (int i = 0; i < size1; i++)
+		for (int i = 0; i < size1+1; i++)
 		{
-			for (int j = 0; j < size2; j++)
+			for (int j = 0; j < size2+1; j++)
 			{
 				rslt[i][j] = 0;
 
-				for (int k = 0; k < size2; k++)
+				for (int k = 0; k < size2+1; k++)
 				{
 					rslt[i][j] += mat1[i][k] * mat2[k][j];
 				}
@@ -190,27 +191,28 @@ namespace FT
 	}
 
 	//using multiply matrices algo
-	void AdjacencyMatrix::getTriangle(ofstream& outputFile) 
+	int AdjacencyMatrix::getTriangle(ofstream& outputFile) 
 	{
-		AdjacencyList thisInList(this->get_length());
-		//todo - create multiply matrixes func
+		//todo - check func
 		int** PoweredTwo = mulMat(matrix, matrix, this->get_length(), this->get_length());
 		int** PoweredThree = mulMat(matrix, PoweredTwo, this->get_length(), this->get_length());
-		for (int i = 0; i < this->get_length(); i++)
+		for (int i = 0; i <= this->get_length(); i++)
 		{
 			if (PoweredThree[i][i] > 0) //true if found a triangle
 			{
-				for (int j = 0; j < this->get_length(); j++)
+				for (int j = 0; j <= this->get_length(); j++)
 				{
-					if (PoweredTwo[i][j] > 0)
+					if (PoweredTwo[i][j] > 0 && i!=j)
 					{
-						for (int k = 0; k < this->get_length(); k++)
+						for (int k = 0; k <= this->get_length(); k++)
 						{
-							if (PoweredTwo[j][k] > 0 && matrix[i][k] > 0)
+							if (PoweredTwo[k][j] > 0 && matrix[k][i] > 0 && 
+								j!=k && k!=i)
 							{
 								outputFile << i << "," << j << "," << k << endl;
-								outputFile.close();
-								return;
+								freeMat(PoweredTwo, this->get_length());
+								freeMat(PoweredThree, this->get_length());
+								return 1;
 							}
 						}
 
@@ -220,53 +222,17 @@ namespace FT
 			}
 		}
 		cout << "NO";
+		return 0;
 	}
-	//for (int i = 0; i < this->get_length(); i++)
-	//{
-	//	for (int j = 0; j < this->get_length(); j++)
-	//	{
-	//		if (PoweredTwo[i][j] > 0 && matrix[i][j] > 0) //true if found a triangle
-	//		{
-	//			for (int k = 0; k < this->get_length(); k++) //find the third edge in the triangle
-	//			{
-	//				if (thisInList.IsAdjacent(i,k) && thisInList.IsAdjacent(k, j))
-	//				{
-	//					outputFile << i << "," << j << "," << k << endl;
-	//					outputFile.close();
-	//					return;
-	//				}
-	//			}
-	//		
-	//		}
 
-	//	}
-
-	//}
-
-
-	//		 check after func if [i,j] [j,k] [k,i] are 1
-	/*for (int i = 0; i <= _length; i++)
+	void AdjacencyMatrix::freeMat(int** matrix, int size)
 	{
-		for (int j = 0; j <= _length; j++)
+		if (matrix != nullptr)
 		{
-			if (matrix[i][j] == 1)
-			{
-				for (int k = 0; k <= _length; k++)
-				{
-					if (matrix[j][k] == 1)
-					{
-						if (matrix[k][i] == 1 && k!= i)
-						{
-							outputFile << i << "," << j << "," << k << endl;
-							outputFile.close();
-							return;
-						}
-
-					}
-				}
-			}
+			for (int i = 0; i <= size; i++)
+				delete[] matrix[i];
+			delete[] matrix;
 		}
+		matrix = nullptr;
 	}
-	cout << "NO";*/
-
 }
