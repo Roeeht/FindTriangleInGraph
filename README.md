@@ -18,7 +18,7 @@
 
 1. **Clone the repository**: 
     ```bash
-    git clone https://github.com/yourusername/find-triangle-in-graph
+    git clone https://github.com/yourusername/findtriangleingraph
     ```
 2. **Compile the project**: 
     ```bash
